@@ -42,9 +42,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Zip extensions
-        run: pnpm zip
-
       - name: Submit to stores
         run: |
           pnpm wxt submit \

@@ -11,6 +11,9 @@
   "git": {
     "commitMessage": "chore(tag): release v${version}"
   },
+  "hooks": {
+    "after:bump": "pnpm zip"
+  },
   "plugins": {
     "@release-it/conventional-changelog": {
       "infile": "CHANGELOG.md",
