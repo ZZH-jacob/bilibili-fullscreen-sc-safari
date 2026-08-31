@@ -6,7 +6,7 @@ import { PositionEnum } from '@/constant'
 
 import { testData } from '@/dev/testData'
 import './app.less'
-import type { sizeEnum } from '@/constant'
+import type { UIScale } from '@/constant'
 
 function App() {
   const [position, setPosition] = useState<PositionEnum>(PositionEnum.BOTTOM_LEFT)
@@ -38,9 +38,9 @@ function App() {
     })()
   }, [])
 
-  const handleSizeChange = (v: sizeEnum) => {
-    processSize(v)
-    void onResize(v)
+  const handleSizeChange = (scale: UIScale) => {
+    processSize(scale)
+    void onResize(scale)
   }
 
   const handlePositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -64,7 +64,7 @@ function App() {
         <option value={PositionEnum.BOTTOM_RIGHT}>右下</option>
       </select>
       <div className="divider"></div>
-      <legend className="title">UI大小</legend>
+      <legend className="title">UI 大小（无级调节）</legend>
       <RadioGroup onChange={handleSizeChange} />
       <div className="divider"></div>
       <legend className="title">示例：</legend>
@@ -73,9 +73,9 @@ function App() {
   )
 }
 
-async function onResize(size: sizeEnum) {
+async function onResize(size: UIScale) {
   // 存着，不然下次点击popup就没有了
-  await storage.setItem<sizeEnum>('local:UISize', size)
+  await storage.setItem<UIScale>('local:UISize', size)
   await sendMessageToActiveTab({ size })
 }
 
@@ -85,7 +85,7 @@ async function onChangePosition(position: PositionEnum) {
   await sendMessageToActiveTab({ position })
 }
 
-async function sendMessageToActiveTab(message: { size?: sizeEnum, position?: PositionEnum }) {
+async function sendMessageToActiveTab(message: { size?: UIScale, position?: PositionEnum }) {
   const [tab] = await browser.tabs.query({
     active: true,
     currentWindow: true,

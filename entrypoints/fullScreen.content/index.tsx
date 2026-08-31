@@ -1,10 +1,10 @@
 import { hasMountElement, mount, unmount } from './utils'
 import ObservePageFullScreen from './observePageFullScreen'
 import { processPosition, processSize } from '@/utils'
-import type { PositionEnum, sizeEnum } from '@/constant'
+import type { PositionEnum, UIScale } from '@/constant'
 
 interface BrowserMessage {
-  size?: sizeEnum
+  size?: UIScale
   position?: PositionEnum
 }
 
@@ -31,7 +31,7 @@ const fullScreenContentScript = defineContentScript({
 
     browser.runtime.onMessage.addListener((message: unknown) => {
       const msg = message as BrowserMessage
-      if (msg.size)
+      if (typeof msg.size === 'number')
         processSize(msg.size)
 
       if (msg.position)

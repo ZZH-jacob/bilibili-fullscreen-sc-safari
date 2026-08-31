@@ -3,7 +3,8 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { useMove, useRAF } from './hook'
 import type { SCListProps, ScInfo } from './type'
 import { eventBus } from '@/utils/event'
-import { DEFAULT_SIZE, POSITION_EVENT, PositionEnum, SIZE_EVENT, WS_SC_EVENT, sizeEnum } from '@/constant'
+import type { UIScale } from '@/constant'
+import { DEFAULT_UI_SCALE, POSITION_EVENT, PositionEnum, SIZE_EVENT, WS_SC_EVENT, normalizeUIScale } from '@/constant'
 import closeIcon from '~/assets/close.svg'
 
 import './index.less'
@@ -11,7 +12,7 @@ import './index.less'
 function SCList(props: SCListProps) {
   const { scDocument = document } = props
   const [scList, setScList] = useState<ScInfo[]>([])
-  const [size, setSize] = useState<sizeEnum>(DEFAULT_SIZE)
+  const [scale, setScale] = useState<UIScale>(DEFAULT_UI_SCALE)
   const [position, setPosition] = useState<PositionEnum>(PositionEnum.BOTTOM_LEFT)
   const scListRef = useRef<HTMLDivElement>(null)
   const positionProps = useMove(scListRef, scDocument, position)
@@ -30,8 +31,7 @@ function SCList(props: SCListProps) {
     void (async () => {
       try {
         const savedSize = await storage.getItem('local:UISize')
-        if (savedSize && Object.values(sizeEnum).includes(savedSize as sizeEnum))
-          setSize(savedSize as sizeEnum)
+        setScale(normalizeUIScale(savedSize))
 
         // 获取保存的位置设置
         const savedPosition = await storage.getItem('local:UIPosition')
@@ -46,16 +46,16 @@ function SCList(props: SCListProps) {
 
   useEffect(() => {
     eventBus.subscribe(WS_SC_EVENT, Listener)
-    eventBus.subscribe(SIZE_EVENT, setSize)
+    eventBus.subscribe(SIZE_EVENT, setScale)
     // 订阅位置变更事件
     eventBus.subscribe(POSITION_EVENT, setPosition)
 
     return () => {
       eventBus.unsubscribe(WS_SC_EVENT, Listener)
-      eventBus.unsubscribe(SIZE_EVENT, setSize)
+      eventBus.unsubscribe(SIZE_EVENT, setScale)
       eventBus.unsubscribe(POSITION_EVENT, setPosition)
     }
-  }, [Listener, setSize])
+  }, [Listener, setScale])
 
   const handleDelete = (e: React.MouseEvent<HTMLImageElement, MouseEvent>, id: number) => {
     e.stopPropagation()
@@ -65,7 +65,11 @@ function SCList(props: SCListProps) {
   }
 
   return (
-    <div className={`container ${size}`} ref={scListRef}>
+    <div
+      className="container"
+      ref={scListRef}
+      style={{ '--sc-scale': scale } as React.CSSProperties}
+    >
       <TransitionGroup
         className="sc-list"
         style={{

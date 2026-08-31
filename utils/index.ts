@@ -1,5 +1,5 @@
 import { eventBus } from '@/utils/event'
-import type { PositionEnum, sizeEnum } from '@/constant'
+import type { PositionEnum, UIScale } from '@/constant'
 import { POSITION_EVENT, SIZE_EVENT, WS_SC_EVENT } from '@/constant'
 import { getReadableTextColor } from '@/utils/color'
 
@@ -63,8 +63,8 @@ function processData(res: DanmuDataProps) {
   })
 }
 
-function processSize(size: sizeEnum) {
-  eventBus.emit(SIZE_EVENT, size)
+function processSize(scale: UIScale) {
+  eventBus.emit(SIZE_EVENT, scale)
 }
 
 function processPosition(position: PositionEnum) {
