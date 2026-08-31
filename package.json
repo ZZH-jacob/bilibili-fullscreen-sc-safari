@@ -4,6 +4,9 @@
   "packageManager": "pnpm@9.15.9",
   "description": "B站助手，全屏显示SC，评论显示IP属地",
   "author": "elester",
+  "contributors": [
+    "ZZH <zzh2003@mail.ustc.edu.cn> (Safari 适配 / fork 维护)"
+  ],
   "license": "MIT",
   "keywords": [
     "bilibili",
