@@ -22,7 +22,10 @@
   "scripts": {
     "dev": "wxt",
     "build": "wxt build",
+    "build:safari": "wxt build -b safari --mv3",
     "zip": "wxt zip",
+    "zip:safari": "wxt zip -b safari --mv3",
+    "package:safari": "pnpm build:safari && sh scripts/package-safari.sh",
     "wxt:submit-init": "wxt submit init",
     "wxt:submit": "wxt submit --chrome-zip .output/*-chrome.zip",
     "compile": "tsc --noEmit",
